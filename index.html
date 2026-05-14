@@ -32,6 +32,7 @@
     }
     .sub { max-width: 790px; margin: 0 auto; color: #76675f; font-size: 17px; }
     .card {
+      scroll-margin-top: 16px;
       background: rgba(255,255,255,.8);
       border: 1px solid rgba(255,255,255,.9);
       box-shadow: 0 20px 50px rgba(92,64,42,.12);
@@ -369,7 +370,7 @@
       return html;
     }
 
-    function render(){
+    function render(shouldScroll = true){
       const card = document.getElementById('quizCard');
       const screen = screens[current];
       document.getElementById('missingTip').style.display = 'none';
@@ -409,14 +410,25 @@
         input.addEventListener('change', e => {
           const id = e.target.name.replace('q','');
           answers[id] = Number(e.target.value);
-          render();
+
+          document.querySelectorAll(`input[name="${e.target.name}"]`).forEach(item => {
+            item.closest('label').classList.toggle('selected', item.checked);
+          });
+
+          updateProgress();
         });
       });
 
       document.getElementById('prevBtn').disabled = current === 0;
       document.getElementById('nextBtn').textContent = current === screens.length - 1 ? '提交结果' : '下一题';
       updateProgress();
-      window.scrollTo({top:0, behavior:'smooth'});
+
+      if (shouldScroll) {
+        document.getElementById('quizCard').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     }
 
     function currentDone(){
@@ -573,7 +585,7 @@
     document.getElementById('resetBtn').addEventListener('click', resetForm);
 
     buildScreens();
-    render();
+    render(false);
   </script>
 </body>
 </html>
