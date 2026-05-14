@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(160deg, #fff7ed 0%, #f6eee7 48%, #efe6dd 100%);
+      color: #2c211c;
+      line-height: 1.75;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 28px 16px 90px; }
+    .hero { text-align: center; padding: 44px 12px 24px; }
+    .tag {
+      display: inline-block;
+      padding: 7px 14px;
+      border: 1px solid #e6d7c8;
+      border-radius: 999px;
+      background: rgba(255,255,255,.65);
+      font-size: 14px;
+      color: #7a675b;
+    }
+    h1 {
+      font-size: clamp(46px, 12vw, 96px);
+      line-height: 1;
+      margin: 18px 0 10px;
+      letter-spacing: -.06em;
+    }
+    .sub { max-width: 790px; margin: 0 auto; color: #76675f; font-size: 17px; }
+    .card {
+      background: rgba(255,255,255,.8);
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: 0 20px 50px rgba(92,64,42,.12);
+      border-radius: 28px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .intro { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .intro div {
+      border: 1px solid #eadccd;
+      border-radius: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,.68);
+      color: #76675f;
+      font-size: 14px;
+    }
+    .intro b { display: block; color: #2c211c; margin-bottom: 4px; }
+    .topline { display: flex; justify-content: space-between; gap: 14px; align-items: center; margin-bottom: 18px; }
+    .pill {
+      white-space: nowrap;
+      background: #fff3e3;
+      border: 1px solid #efd6ba;
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: #6a452f;
+      font-size: 13px;
+    }
+    .type { color: #76675f; font-size: 14px; }
+    .qtitle { font-size: 24px; margin: 0 0 10px; letter-spacing: -.02em; }
+    .qt { font-weight: 760; font-size: 20px; margin: 16px 0 18px; }
+    .story {
+      background: #fff7ec;
+      border-left: 5px solid #c8915d;
+      border-radius: 20px;
+      padding: 18px 20px;
+      margin: 16px 0 18px;
+      color: #4f3a30;
+    }
+    .story b { display: block; margin-bottom: 8px; color: #2c211c; }
+    .storyText { white-space: pre-line; }
+    .scale { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
+    .scale label {
+      cursor: pointer;
+      border: 1px solid #eadccd;
+      border-radius: 16px;
+      background: rgba(255,255,255,.78);
+      min-height: 68px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: .16s;
+      user-select: none;
+    }
+    .scale input { display: none; }
+    .n { font-weight: 850; }
+    .l { font-size: 11px; color: #7c6d65; line-height: 1.2; text-align: center; }
+    .scale label:hover { transform: translateY(-2px); border-color: #c99666; }
+    .scale label.selected {
+      background: linear-gradient(135deg, #6b432c, #b77a48);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 10px 26px rgba(107,67,44,.22);
+    }
+    .scale label.selected .l { color: rgba(255,255,255,.86); }
+    .nav {
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+      background: linear-gradient(180deg, transparent, rgba(247,240,232,.97) 26%);
+      padding-top: 22px;
+      margin-top: 18px;
+    }
+    .progressBox { height: 9px; border-radius: 999px; background: #e7d7c7; overflow: hidden; margin: 0 0 14px; }
+    .progress { height: 100%; width: 0; background: linear-gradient(90deg, #6b432c, #c7925e); transition: .2s; }
+    .btnrow { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    button { border: 0; border-radius: 999px; padding: 13px 22px; font-size: 16px; font-weight: 760; cursor: pointer; }
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .mainBtn { background: #2c211c; color: #fff; box-shadow: 0 14px 28px rgba(44,33,28,.22); }
+    .secBtn { background: rgba(255,255,255,.8); border: 1px solid #eadccd; color: #2c211c; }
+    .result { display: none; }
+    .resultHero { background: linear-gradient(135deg, #2f211b, #8b5b39); color: white; border-radius: 28px; padding: 26px; margin-bottom: 18px; }
+    .resultHero h2 { font-size: 34px; margin: 0; }
+    .resultHero p { color: rgba(255,255,255,.84); }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .box { border: 1px solid #eadccd; background: rgba(255,255,255,.66); border-radius: 20px; padding: 17px; }
+    .box h3 { margin: 0 0 8px; }
+    .num { font-size: 30px; font-weight: 850; color: #6b432c; }
+    .bar { height: 9px; background: #eadccd; border-radius: 999px; overflow: hidden; margin-top: 10px; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, #6b432c, #c7925e); }
+    .analysis { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 15px; }
+    .warn { color: #9a3b32; font-weight: 750; }
+    .small { font-size: 13px; color: #7a675b; }
+    .missing { color: #9a3b32; font-size: 14px; margin-top: 12px; display: none; }
+    @media(max-width:760px){
+      .intro,.grid,.analysis{grid-template-columns:1fr}
+      .scale{grid-template-columns:repeat(4,1fr)}
+      .card{padding:19px}
+      .scale label{min-height:60px}
+      .topline{display:block}
+      .pill{display:inline-block;margin-top:8px}
+      .btnrow{display:grid;grid-template-columns:1fr 1fr}
+      .btnrow button:last-child{grid-column:1 / -1}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <span class="tag">亲密关系 · 依恋模式 · 60题深度自测</span>
+      <p class="sub">这份测试不是为了给谁贴标签，而是帮你看见：在爱里，你如何靠近，如何防御，如何害怕失去，又如何保护自己。</p>
+    </section>
+
+    <section class="intro card" id="intro">
+      <div><b>三种题型</b>第一类是日常反应，第二类是深层信念，第三类是故事组题。</div>
+      <div><b>提交后看结果</b>答完最后一组故事后，点击“提交结果”，即可看到自己的完整分析。</div>
+      <div><b>60道深度题</b>请按真实倾向作答，不要按“理想中的我”作答。没有好坏，只有模式。</div>
+    </section>
+
+    <section class="card" id="userInfoCard">
+      <div class="topline">
+        <div>
+          <div class="type">开始之前</div>
+          <h2 class="qtitle">填写姓名或昵称</h2>
+        </div>
+        <span class="pill">可不填</span>
+      </div>
+      <input id="testerName" type="text" placeholder="例如：朋友A" style="width:100%;border:1px solid #eadccd;border-radius:18px;padding:14px 16px;font-size:16px;background:rgba(255,255,255,.8);outline:none;">
+    </section>
+
+    <section class="card" id="quizCard"></section>
+
+    <div class="nav" id="navBox">
+      <div class="progressBox"><div id="progress" class="progress"></div></div>
+      <div class="btnrow">
+        <button class="secBtn" type="button" id="prevBtn">上一题</button>
+        <button class="secBtn" type="button" id="resetBtn">重新作答</button>
+        <button class="mainBtn" type="button" id="nextBtn">下一题</button>
+      </div>
+      <p class="missing" id="missingTip">请先完成当前题目。</p>
+    </div>
+
+    <section class="card result" id="resultBox">
+      <div class="resultHero">
+        <p>你的主要依恋倾向</p>
+        <h2 id="dominantTitle"></h2>
+        <p id="dominantDesc"></p>
+      </div>
+      <h2>四个维度分数</h2>
+      <div class="grid" id="scoreGrid"></div>
+      <div class="analysis" id="analysisGrid"></div>
+    </section>
+  </main>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxCtkE-DopnsphUsncCRxFBs7GNgBT_UgpxJqR41RIOqD_IVb1mxqrr05BIKR77URDz_w/exec';
+
+    const scaleLabels = {
+      1: '完全不像我',
+      2: '大多不像',
+      3: '有点不像',
+      4: '说不清',
+      5: '有点像',
+      6: '大多像',
+      7: '非常像'
+    };
+
+    const dims = {
+      secure: '安全型',
+      anxious: '焦虑型',
+      avoidant: '回避型',
+      fearful: '混乱/恐惧型'
+    };
+
+    const dominantText = {
+      secure: '你更接近安全型依恋。你能表达需要，也能尊重边界；能面对冲突，也相信修复。你不是没有不安，而是不安出现时，你更能回到现实、沟通和自我稳定。',
+      anxious: '你更接近焦虑型依恋。你很在乎连接，也很容易在不确定中失衡。你常常不是要控制伴侣，而是在努力确认自己仍被选择、仍有位置、仍然安全。',
+      avoidant: '你更接近回避型依恋。你可能把独立、冷静和可控当作安全来源。你不是没有感情，而是当感情太深、需求太近、关系太黏时，你会本能后退。',
+      fearful: '你更接近混乱/恐惧型依恋。你可能既渴望被坚定选择，又害怕真的交出自己；既害怕对方离开，也害怕对方靠太近。你的保护系统像同时踩下油门和刹车。'
+    };
+
+    const dimText = {
+      secure: {
+        definition: '安全型依恋不是“永远不焦虑”，而是一个人在关系里既能靠近，也能分离；既能表达需要，也能尊重边界；既能承受冲突，也相信关系可以被修复。',
+        high: '你的安全型分数较高，说明你在亲密关系里有较强的稳定能力。你通常能把“我需要你”和“我也能照顾自己”同时放在心里。',
+        mid: '你的安全型能力存在，但可能受关系状态影响。当伴侣稳定、回应清楚时，你能靠近；当对方模糊、沉默或冲突升级时，你可能短暂滑向焦虑或回避。',
+        low: '你的安全感可能比较容易被关系事件撼动。亲密、冲突、沉默、独处和承诺都可能触发防御。'
+      },
+      anxious: {
+        definition: '焦虑型依恋的核心不是“太黏人”，而是内心很难稳定地相信自己会被持续选择。它常表现为对回应速度、语气变化、承诺强度高度敏感。',
+        high: '你的焦虑型分数较高，说明你很容易进入“确认系统”：想确认对方还爱不爱、自己还重不重要、关系有没有变。',
+        mid: '你有一定焦虑倾向，尤其在伴侣表达减少、回复变慢、冲突没有结论或未来不明确时更明显。',
+        low: '你的焦虑型分数较低，说明你一般不会频繁通过伴侣反馈来确认自我价值。'
+      },
+      avoidant: {
+        definition: '回避型依恋的核心不是“不爱”，而是亲密过深时会触发失控感。它常表现为重视独立、理性化情绪、回避脆弱、降低期待。',
+        high: '你的回避型分数较高，说明你可能习惯用距离保护自己。你可能不是没有情绪，而是不习惯把情绪交给别人。',
+        mid: '你有一定回避倾向，通常在对方情绪很多、关系进展太快、被要求解释内心或表达承诺时出现。',
+        low: '你的回避型分数较低，说明你较少用疏离来维持安全感，也比较能接受关系中的依赖和情绪交流。'
+      },
+      fearful: {
+        definition: '混乱/恐惧型依恋常同时包含焦虑和回避：既害怕被抛下，又害怕被靠近；既渴望被坚定选择，又担心真正亲密后会被控制、被看穿或被伤害。',
+        high: '你的混乱/恐惧型分数较高，说明你在关系中可能经常处于拉扯状态。你可能会测试对方、推开对方，又希望对方追上来。',
+        mid: '你在某些情境下会出现混乱/恐惧反应：越在乎越紧张，越亲近越怀疑，越稳定越担心失去。',
+        low: '你的混乱/恐惧型分数较低，说明你较少长期处在“想靠近又想逃”的撕扯中。'
+      }
+    };
+
+    const recommendationText = {
+      secure: '你的练习重点是保持，而不是过度修理自己。继续保持清楚表达、尊重边界、冲突后修复。',
+      anxious: '你的练习重点是把安全感从“对方必须立刻给我答案”慢慢转回到“我能先安顿自己，再表达需求”。',
+      avoidant: '你的练习重点不是强迫自己完全敞开，而是学习“不断联的暂停”。当你想消失时，可以先说：我现在有点过载，需要一点时间，但我会回来。',
+      fearful: '你的练习重点是建立稳定规则。比如冲突时不提分手测试、不突然消失、不在情绪峰值做决定、暂停后必须回来。'
+    };
+
+    const simpleQuestions = [
+      {id:1,tier:'第一类：日常反应题',text:'伴侣没有及时回消息时，我能先把注意力放回自己的事，而不是马上进入关系危机。',dim:'secure'},
+      {id:2,tier:'第一类：日常反应题',text:'当伴侣想认真谈“我们之间的问题”时，我会本能地想拖延、转移或让这件事淡掉。',dim:'avoidant'},
+      {id:3,tier:'第一类：日常反应题',text:'伴侣越温柔地靠近我，我有时越会紧张，像在等另一只鞋掉下来。',dim:'fearful'},
+      {id:4,tier:'第一类：日常反应题',text:'争吵后，我通常能相信冲突可以被修复，而不是把它当成关系结束的预告。',dim:'secure'},
+      {id:5,tier:'第一类：日常反应题',text:'我会从伴侣的语气、标点、表情包和回复速度里判断自己还重不重要。',dim:'anxious'},
+      {id:6,tier:'第一类：日常反应题',text:'我不太愿意让伴侣看见我真正无助、嫉妒、害怕或需要照顾的一面。',dim:'avoidant'},
+      {id:7,tier:'第一类：日常反应题',text:'当关系突然变得很稳定，我反而可能开始怀疑、挑刺或想拉开一点距离。',dim:'fearful'},
+      {id:8,tier:'第一类：日常反应题',text:'伴侣需要独处时，我能理解这可能是恢复精力，而不是不爱我。',dim:'secure'},
+      {id:9,tier:'第一类：日常反应题',text:'只要关系里有一点模糊，我就很难忍住不追问、不确认、不反复想。',dim:'anxious'},
+      {id:10,tier:'第一类：日常反应题',text:'比起说“我受伤了”，我更容易表现得无所谓，或者让自己忙到没空感觉。',dim:'avoidant'},
+      {id:11,tier:'第一类：日常反应题',text:'我在关系里有时会突然从非常投入变得想逃，自己也很难解释。',dim:'fearful'},
+      {id:12,tier:'第一类：日常反应题',text:'当伴侣指出我的问题时，我可以区分“我做错了一件事”和“我这个人不值得爱”。',dim:'secure'},
+      {id:13,tier:'第一类：日常反应题',text:'我越爱一个人，越容易因为一点变化就开始担心自己会被替代。',dim:'anxious'},
+      {id:14,tier:'第一类：日常反应题',text:'当对方情绪很多、需求很强时，我会觉得被压迫，甚至想把门关上。',dim:'avoidant'},
+      {id:15,tier:'第一类：日常反应题',text:'我有时会通过冷淡、消失、说狠话或提分开来测试对方会不会追上来。',dim:'fearful'},
+      {id:16,tier:'第一类：日常反应题',text:'即使冲突很激烈，我也更希望找到我们真正受伤的地方，而不是赢过对方。',dim:'secure'},
+      {id:17,tier:'第一类：日常反应题',text:'伴侣的一点疏远会明显影响我的工作、学习、睡眠或自我价值感。',dim:'anxious'},
+      {id:18,tier:'第一类：日常反应题',text:'当伴侣问我“你到底怎么想的”时，我会觉得被逼问，哪怕对方只是想理解我。',dim:'avoidant'},
+      {id:19,tier:'第一类：日常反应题',text:'亲密之后，我有时会突然想一个人待着，好像只有退回自己那里才安全。',dim:'fearful'},
+      {id:20,tier:'第二类：深层信念题',text:'我内心相信：真正稳定的关系，不需要靠不断证明和反复确认来维持。',dim:'secure'},
+      {id:21,tier:'第二类：深层信念题',text:'我常觉得自己必须足够懂事、足够有用、足够好，才配被长期选择。',dim:'anxious'},
+      {id:22,tier:'第二类：深层信念题',text:'依赖别人让我觉得危险，因为一旦依赖，对方就可能影响、控制或伤害我。',dim:'avoidant'},
+      {id:23,tier:'第二类：深层信念题',text:'我很难相信一个人既看见我的全部，又不会因此离开或利用我。',dim:'fearful'},
+      {id:24,tier:'第二类：深层信念题',text:'我相信两个人可以很亲密，同时仍然保有独立的自我和边界。',dim:'secure'},
+      {id:25,tier:'第二类：深层信念题',text:'如果伴侣没有主动表达爱，我会很难相信爱仍然在。',dim:'anxious'},
+      {id:26,tier:'第二类：深层信念题',text:'我更愿意降低期待，因为期待越少，失望时越不痛。',dim:'avoidant'},
+      {id:27,tier:'第二类：深层信念题',text:'我常觉得亲密关系像一个迟早会出事的地方，只是现在还没发生。',dim:'fearful'},
+      {id:28,tier:'第二类：深层信念题',text:'我能允许自己需要伴侣，也能允许伴侣有时无法满足我。',dim:'secure'},
+      {id:29,tier:'第二类：深层信念题',text:'我经常把“对方没有立刻回应”理解成“我已经不重要了”。',dim:'anxious'},
+      {id:30,tier:'第二类：深层信念题',text:'我害怕太深的亲密会让我失去清醒、自由和掌控感。',dim:'avoidant'},
+      {id:31,tier:'第二类：深层信念题',text:'我会同时害怕两件事：对方离开我，以及对方真的靠近我。',dim:'fearful'},
+      {id:32,tier:'第二类：深层信念题',text:'我相信冲突不是关系失败的证据，而是需要学习的新信息。',dim:'secure'},
+      {id:33,tier:'第二类：深层信念题',text:'我会用过度付出、过度理解或过度让步，换取对方别离开。',dim:'anxious'},
+      {id:34,tier:'第二类：深层信念题',text:'我心里有一道门：别人可以靠近，但不能真的进到最里面。',dim:'avoidant'},
+      {id:35,tier:'第二类：深层信念题',text:'关系越稳定，我有时越想挑刺、怀疑或制造距离，好像稳定本身也不安全。',dim:'fearful'},
+      {id:36,tier:'第二类：深层信念题',text:'我可以在爱里保持清醒，但不因此把所有亲密都看成风险。',dim:'secure'},
+      {id:37,tier:'第二类：深层信念题',text:'我内心深处会担心：如果我不够特别，对方迟早会选择别人。',dim:'anxious'},
+      {id:38,tier:'第二类：深层信念题',text:'我觉得很多情绪表达最终都会变成麻烦，所以不如少说。',dim:'avoidant'},
+      {id:39,tier:'第二类：深层信念题',text:'我越渴望一个人，越容易怀疑自己会被那个人伤得最深。',dim:'fearful'},
+      {id:40,tier:'第二类：深层信念题',text:'我能把伴侣的拒绝、疲惫或沉默理解为一种状态，而不是马上理解为对我的否定。',dim:'secure'}
+    ];
+
+    const stories = [
+      {
+        title:'故事一：小红在卫生间里的消息',
+        text:'南熹正在上厕所，门外很安静，手机却突然亮了。伴侣发来一句：“你在干嘛，怎么不回我？”语气看不出是撒娇、担心，还是不满。南熹本来只是想安静地待几分钟，可那一瞬间，她忽然感觉自己好像必须立刻证明：我不是故意冷落你，我没有变，我还在。她一边尴尬，一边又有点委屈：为什么连这么小的空白，都像要被解释？',
+        qs:[
+          {id:41,text:'如果我是小红，我会立刻有压力，甚至想马上解释清楚，怕对方误会我故意不回。',dim:'anxious'},
+          {id:42,text:'我能把这件事理解为一次小小的错位，之后用轻松但清楚的方式说：“我刚才不方便回，下次别急着判断我。”',dim:'secure'},
+          {id:43,text:'我可能会觉得对方太黏、太烦、太侵入，于是之后更想减少报备和回应。',dim:'avoidant'},
+          {id:44,text:'我会一边想被对方在意，一边又觉得这种在意像监控，让我想逃。',dim:'fearful'}
+        ]
+      },
+      {
+        title:'故事二：那通没有打成的电话',
+        text:'你们约好晚上通话。到了时间，对方说临时很累，想先睡。语气不冷，但也没有特别解释。你其实也累，可心里仍然闪过一个很小的念头：如果我真的重要，TA会不会再多说一句？第二天，对方解释并道歉，说昨晚真的撑不住。你知道这解释合理，但身体里的不安并不一定马上听话。',
+        qs:[
+          {id:45,text:'我会很难只把这理解为“累了”，而会开始想：是不是不想见我、是不是感情淡了。',dim:'anxious'},
+          {id:46,text:'我能告诉对方“我有一点失落，但你先休息，我们明天再聊”，而不是用冷淡惩罚对方。',dim:'secure'},
+          {id:47,text:'我可能表面说没事，但心里会记上一笔，以后减少期待，免得再失望。',dim:'avoidant'},
+          {id:48,text:'即使对方解释了，我也可能怀疑：这次是真的累，那下次呢？我是不是迟早会被放到后面？',dim:'fearful'}
+        ]
+      },
+      {
+        title:'故事三：一次想靠近的谈话',
+        text:'伴侣认真告诉你：“最近我感觉我们有些问题，我想和你聊聊。”对方没有责备，只是想靠近真实。谈话中，对方说：“有时我靠近你，会感觉你突然退开。”你听见这句话，心里像被照到一处旧伤：你既想被理解，又害怕自己一旦被看穿，就再也没有退路。',
+        qs:[
+          {id:49,text:'我能尽量留下来听，而不是立刻防御、逃走、反击或把谈话变成审判。',dim:'secure'},
+          {id:50,text:'我会想把话题变轻、变远，或者只讲一个安全版本，而不是讲真正的伤口。',dim:'avoidant'},
+          {id:51,text:'我可能一边想相信对方是善意的，一边又怀疑这是不是暂时的温柔，之后还是会伤我。',dim:'fearful'},
+          {id:52,text:'如果对方沉默了一会儿说需要消化，我会很想立刻确认“你到底还爱不爱我”。',dim:'anxious'}
+        ]
+      },
+      {
+        title:'故事四：被看见之后',
+        text:'你经历了一件很难过的事。伴侣问你：“你要不要跟我说说？我在。”对方没有逼问，只是坐在旁边，告诉你可以慢慢来。你终于说出一点脆弱，对方认真听了，也没有评价你。那一刻似乎很安全，可第二天，对方像平常一样对你，没有特别热烈，也没有变冷。',
+        qs:[
+          {id:53,text:'即使我很痛，我也可能说“没事”，因为真正说出来会让我觉得自己太暴露。',dim:'avoidant'},
+          {id:54,text:'我能接受这种陪伴，并逐渐相信被看见不一定意味着被控制。',dim:'secure'},
+          {id:55,text:'说出脆弱后，我可能会突然害怕自己说太多，之后开始后悔、抽离或假装没发生。',dim:'fearful'},
+          {id:56,text:'第二天对方没有特别热烈时，我会忍不住猜：TA是不是觉得我麻烦了，只是没说出来。',dim:'anxious'}
+        ]
+      },
+      {
+        title:'故事五：半小时的暂停',
+        text:'你们发生争执，对方说：“我现在有点乱，想冷静半小时，之后我会回来继续谈。”半小时里，手机很安静。你不知道对方是在整理情绪，还是在心里离你更远。后来对方真的回来了，说：“我不想赢，我想理解你。”你们没有一次谈完所有问题，但都愿意下次继续谈。',
+        qs:[
+          {id:57,text:'如果对方真的按约定回来，我能逐渐相信暂停不等于抛弃。',dim:'secure'},
+          {id:58,text:'冷静的半小时里，我会反复想对方是不是在准备离开，甚至想提前发消息打破沉默。',dim:'anxious'},
+          {id:59,text:'对方回来后希望继续谈，而我可能会说“算了，没必要了”，因为重新谈会让我觉得麻烦又危险。',dim:'avoidant'},
+          {id:60,text:'我可能会被“我想理解你”打动，却又怀疑这样的理解不会长久，迟早还是会变成伤害。',dim:'fearful'}
+        ]
+      }
+    ];
+
+    let screens = [];
+    let current = 0;
+    let answers = {};
+
+    function buildScreens(){
+      screens = simpleQuestions.map(q => ({type:'single', q:q}));
+      stories.forEach(story => screens.push({type:'story', story:story}));
+    }
+
+    function scaleHTML(id, dim){
+      let html = '<div class="scale">';
+      [1,2,3,4,5,6,7].forEach(n => {
+        const selected = answers[id] === n ? 'selected' : '';
+        const checked = answers[id] === n ? 'checked' : '';
+        html += `
+          <label class="${selected}">
+            <input type="radio" name="q${id}" value="${n}" data-dim="${dim}" ${checked}>
+            <span class="n">${n}</span>
+            <span class="l">${scaleLabels[n]}</span>
+          </label>`;
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function render(){
+      const card = document.getElementById('quizCard');
+      const screen = screens[current];
+      document.getElementById('missingTip').style.display = 'none';
+
+      if(screen.type === 'single'){
+        const q = screen.q;
+        card.innerHTML = `
+          <div class="topline">
+            <div><div class="type">${q.tier}</div><h2 class="qtitle">第 ${q.id} 题 / 60</h2></div>
+            <span class="pill">${current + 1} / ${screens.length}</span>
+          </div>
+          <div class="qt">${q.text}</div>
+          ${scaleHTML(q.id, q.dim)}
+        `;
+      } else {
+        const st = screen.story;
+        const storyIndex = current - simpleQuestions.length + 1;
+        const questionBlocks = st.qs.map(q => `
+          <div class="qblock">
+            <p class="small">第 ${q.id} 题 / 60</p>
+            <div class="qt">${q.text}</div>
+            ${scaleHTML(q.id, q.dim)}
+          </div>
+        `).join('<hr style="border:0;border-top:1px solid #eadccd;margin:22px 0;">');
+
+        card.innerHTML = `
+          <div class="topline">
+            <div><div class="type">第三类：故事组题</div><h2 class="qtitle">${st.title}</h2></div>
+            <span class="pill">故事 ${storyIndex} / ${stories.length}</span>
+          </div>
+          <div class="story"><b>完整情境</b><div class="storyText">${st.text}</div></div>
+          ${questionBlocks}
+        `;
+      }
+
+      document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.addEventListener('change', e => {
+          const id = e.target.name.replace('q','');
+          answers[id] = Number(e.target.value);
+          render();
+        });
+      });
+
+      document.getElementById('prevBtn').disabled = current === 0;
+      document.getElementById('nextBtn').textContent = current === screens.length - 1 ? '提交结果' : '下一题';
+      updateProgress();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function currentDone(){
+      const screen = screens[current];
+      if(screen.type === 'single') return Boolean(answers[screen.q.id]);
+      return screen.story.qs.every(q => Boolean(answers[q.id]));
+    }
+
+    function nextScreen(){
+      if(!currentDone()){
+        document.getElementById('missingTip').style.display = 'block';
+        return;
+      }
+      if(current < screens.length - 1){
+        current++;
+        render();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevScreen(){
+      if(current > 0){
+        current--;
+        render();
+      }
+    }
+
+    function updateProgress(){
+      const answered = Object.keys(answers).length;
+      document.getElementById('progress').style.width = `${answered / 60 * 100}%`;
+    }
+
+    function level(value){
+      if(value >= 5.25) return 'high';
+      if(value >= 3.65) return 'mid';
+      return 'low';
+    }
+
+    function showResult(){
+      if(Object.keys(answers).length < 60){
+        alert(`还有 ${60 - Object.keys(answers).length} 题没有作答。请完成后再生成结果。`);
+        return;
+      }
+
+      const allQuestions = [...simpleQuestions, ...stories.flatMap(st => st.qs)];
+      const sums = {secure:[], anxious:[], avoidant:[], fearful:[]};
+      allQuestions.forEach(q => sums[q.dim].push(Number(answers[q.id])));
+
+      const scores = {};
+      Object.entries(sums).forEach(([key, arr]) => {
+        scores[key] = arr.reduce((a,b) => a + b, 0) / arr.length;
+      });
+
+      const sorted = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+      const top = sorted[0][0];
+      const second = sorted[1][0];
+      const gap = sorted[0][1] - sorted[1][1];
+      const dominant = gap < 0.35 ? `${dims[top]} + ${dims[second]} 混合倾向` : dims[top];
+      const testerName = (document.getElementById('testerName').value || '匿名').trim() || '匿名';
+
+      const payload = {
+        testerName: testerName,
+        submittedAt: new Date().toLocaleString('zh-CN', {hour12:false}),
+        dominant: dominant,
+        topType: dims[top],
+        secondType: dims[second],
+        gap: Number(gap.toFixed(2)),
+        secure: Number(scores.secure.toFixed(2)),
+        anxious: Number(scores.anxious.toFixed(2)),
+        avoidant: Number(scores.avoidant.toFixed(2)),
+        fearful: Number(scores.fearful.toFixed(2)),
+        answers: JSON.stringify(answers)
+      };
+      submitToBackend(payload);
+
+      document.getElementById('dominantTitle').textContent = dominant;
+      document.getElementById('dominantDesc').textContent = dominantText[top] + (gap < 0.35 ? ' 你的前两项分差很小，因此更像混合型，而不是单一类型。' : '');
+
+      document.getElementById('scoreGrid').innerHTML = Object.entries(scores).map(([key, value]) => `
+        <div class="box">
+          <h3>${dims[key]}</h3>
+          <div class="num">${value.toFixed(2)}</div>
+          <div class="bar"><span style="width:${(value - 1) / 6 * 100}%"></span></div>
+        </div>
+      `).join('');
+
+      document.getElementById('analysisGrid').innerHTML = Object.entries(scores).map(([key, value]) => `
+        <div class="box">
+          <h3>${dims[key]}｜${value.toFixed(2)} / 7</h3>
+          <p><b>定义：</b>${dimText[key].definition}</p>
+          <p><b>你的状态：</b>${dimText[key][level(value)]}</p>
+        </div>
+      `).join('') + `
+        <div class="box">
+          <h3>你的主要关系课题</h3>
+          <p>${recommendationText[top]}</p>
+          <p>如果你的第二高分也接近最高分，说明你可能不是单一依恋模式，而是在不同情境下切换。</p>
+        </div>
+        <div class="box">
+          <h3>四种类型完整理解</h3>
+          <p><b>安全型：</b>能亲近，也能独立；能表达，也能等待；能冲突，也能修复。</p>
+          <p><b>焦虑型：</b>害怕失去连接，容易通过确认、追问、过度付出来换安全感。</p>
+          <p><b>回避型：</b>害怕亲密带来的失控，容易用距离、理性、沉默和降低期待保护自己。</p>
+          <p><b>混乱/恐惧型：</b>同时害怕被抛下和被靠近，关系中常出现靠近与逃离并存的拉扯。</p>
+        </div>
+        <div class="box">
+          <h3>重要提醒</h3>
+          <p class="warn">依恋模式不是人格判决，也不是伴侣关系的全部答案。</p>
+          <p>它更像一张地图：标出你在亲密中最容易害怕什么、怎样保护自己、又怎样慢慢学习安全。</p>
+          <p class="small">本测试仅用于自我觉察，不构成心理诊断。</p>
+        </div>
+      `;
+
+      document.getElementById('quizCard').style.display = 'none';
+      document.getElementById('navBox').style.display = 'none';
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('userInfoCard').style.display = 'none';
+      document.getElementById('resultBox').style.display = 'block';
+      document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+    }
+
+    function submitToBackend(payload){
+      if(!GOOGLE_SCRIPT_URL){
+        console.log('未配置 GOOGLE_SCRIPT_URL，结果只在本机显示：', payload);
+        return;
+      }
+      try{
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify(payload)
+        });
+      } catch(error){
+        console.log('提交后台失败，但本页仍显示结果：', error);
+      }
+    }
+
+    function resetForm(){
+      if(!confirm('确定要清空所有答案吗？')) return;
+      answers = {};
+      current = 0;
+      document.getElementById('quizCard').style.display = 'block';
+      document.getElementById('navBox').style.display = 'block';
+      document.getElementById('intro').style.display = 'grid';
+      document.getElementById('userInfoCard').style.display = 'block';
+      document.getElementById('resultBox').style.display = 'none';
+      render();
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', prevScreen);
+    document.getElementById('nextBtn').addEventListener('click', nextScreen);
+    document.getElementById('resetBtn').addEventListener('click', resetForm);
+
+    buildScreens();
+    render();
+  </script>
+</body>
+</html>
